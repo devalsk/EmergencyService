@@ -5,10 +5,12 @@ package com.example.devsk.emergencyservice;
 
 public class TaskModel  {
 
-    String name;
-    String adress;
-    String reason;
-    String key;
+   public String name;
+   public String adress;
+    public String reason;
+    public String key;
+    public String dataTime;
+
 
     public TaskModel() {
 
@@ -16,11 +18,12 @@ public class TaskModel  {
 
     }
 
-    public TaskModel(String name, String adress, String reason, String key) {
+    public TaskModel(String name, String adress, String reason,String key,String dataTime) {
         this.name = name;
         this.adress = adress;
         this.reason = reason;
-        this.key = key;
+        this.key  = key;
+        this.dataTime = dataTime;
     }
 
 

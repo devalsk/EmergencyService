@@ -43,9 +43,12 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
 
         TaskModel taskm = list.get(position);
 
+
         holder.name.setText(taskm.name);
         holder.adress.setText(taskm.adress);
         holder.reason.setText(taskm.reason);
+
+
 
         holder.itemView.setOnClickListener(new OnClickListener() {
 
@@ -58,6 +61,7 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
                 String name = taskm.name;
                 String adress = taskm.adress;
                 String reason = taskm.reason;
+
 
                 intent.putExtra(EXTRA_M,name);
                 intent.putExtra(EXTRA_A,adress);

@@ -66,6 +66,14 @@
             android:layout_weight="0.04"
             android:text="TextView" />
 
+        <Button
+            android:id="@+id/buttn"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="0.04"
+            android:onClick="onClic"
+            android:text="Принять заявку" />
+
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>

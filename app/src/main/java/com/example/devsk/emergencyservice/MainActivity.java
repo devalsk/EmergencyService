@@ -32,6 +32,8 @@ public class MainActivity extends  AppCompatActivity{
     private List<TaskModel> result;
     private TaskAdapter adapter;
 
+    private  FirebaseDatabase database;
+    private  DatabaseReference reference;
 
 
     @Override
@@ -41,6 +43,11 @@ public class MainActivity extends  AppCompatActivity{
         setContentView(R.layout.activity_main);
 
 
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference("Task");
+
+      reference.child("/task/dataTime").setValue("Время 2017");
+
         result = new ArrayList<>();
         recyclerView = (RecyclerView) findViewById(R.id.task_list);
         recyclerView.setHasFixedSize(true);
@@ -48,26 +55,24 @@ public class MainActivity extends  AppCompatActivity{
         lin.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(lin);
 
+        updateList();
 
-        adapter = new TaskAdapter(creatResult());
-         recyclerView.setAdapter(adapter);
+       adapter = new TaskAdapter(result);
+          recyclerView.setAdapter(adapter);
 
 
 
 
 }
-private   List<TaskModel> creatResult(){
+    private   List<TaskModel> creatResult(){
 
 List<TaskModel> list = new ArrayList<>();
 
 
    for (int i = 0; i < 5; i++){
 
-       list.add(new TaskModel("Ленина 56", "кв 5", "Отключение электричества", "11"));
-       list.add(new TaskModel("Ленина 57", "кв 5", "Отключение электричества", "11"));
-       list.add(new TaskModel("Димитрова 27", "кв 5", "Отключение электричества", "11"));
-       list.add(new TaskModel("Ленина 57", "кв 5", "Отключение электричества", "11"));
-       list.add(new TaskModel("Комсомольский 69", "кв 238", "Отключение воды", "11"));
+    //   list.add(new TaskModel("Ленина 56", "кв 5", "Отключение электричества",""));
+
    }
 
 
@@ -81,6 +86,72 @@ List<TaskModel> list = new ArrayList<>();
 
 }
 
+private  void updateList(){
+
+    reference.addChildEventListener(new ChildEventListener() {
+        @Override
+        public void onChildAdded(DataSnapshot dataSnapshot, String s) {
+
+            result.add(dataSnapshot.getValue(TaskModel.class));
+            adapter.notifyDataSetChanged();
+        }
+
+        @Override
+        public void onChildChanged(DataSnapshot dataSnapshot, String s) {
+
+            TaskModel model = dataSnapshot.getValue(TaskModel.class);
+
+            int index = getItemIndex(model);
+
+            result.set(index,model);
+            adapter.notifyItemChanged(getItemIndex(model));
+        }
+
+        @Override
+        public void onChildRemoved(DataSnapshot dataSnapshot) {
+            TaskModel model = dataSnapshot.getValue(TaskModel.class);
+
+            int index = getItemIndex(model);
+
+            result.remove(index);
+            adapter.notifyItemRemoved(index);
+
+        }
+
+        @Override
+        public void onChildMoved(DataSnapshot dataSnapshot, String s) {
+
+        }
+
+        @Override
+        public void onCancelled(DatabaseError databaseError) {
+
+        }
+    });
+
+
+
+
+}
+
+private int getItemIndex(TaskModel model) {
+
+    int index = -1;
+
+    for (int i = 0; i < result.size(); i++) {
+        if (result.get(i).key.equals(model.key)) {
+            index = i;
+            break;
+
+
+        }
+
+
+    }
+
+
+    return index;
+}
 
 
 }
