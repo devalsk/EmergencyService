@@ -3,6 +3,7 @@ package com.example.devsk.emergencyservice;
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
 import android.text.Layout;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +25,7 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
     public static final String EXTRA_M = "EXTRA_M" ;
     public  static  final String EXTRA_A = "EXTRA_A";
     public static  final String EXTRA_R = "EXTRA_R";
-
+    public static  final String EXTRA_P = "EXTRA_P";
     //   private Intent intent;
     private List<TaskModel> list;
 
@@ -52,15 +53,20 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
 
         holder.itemView.setOnClickListener(new OnClickListener() {
 
+
+
             TaskModel taskm = list.get(position);
 
             @Override
             public void onClick(View view) {
 
+
                 Intent intent = new Intent(view.getContext(),ActivityDescription.class);
                 String name = taskm.name;
                 String adress = taskm.adress;
                 String reason = taskm.reason;
+
+
 
 
                 intent.putExtra(EXTRA_M,name);
@@ -99,6 +105,13 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
             name = (TextView) itemView.findViewById(R.id.textName);
             adress = (TextView) itemView.findViewById(R.id.textAd);
             reason = (TextView) itemView.findViewById(R.id.textPr);
+            itemView.setOnClickListener(new OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    Log.d("daf", "Element " + getAdapterPosition() + " clicked.");
+
+                }
+            });
         }
 
 
