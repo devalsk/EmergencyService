@@ -1,9 +1,11 @@
 package com.example.devsk.emergencyservice;
 
 
+import android.content.ClipData;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
 
 
     private RecyclerView recyclerView;
-    private List<TaskModel> result;
+    public List<TaskModel> result;
     private TaskAdapter adapter;
 
     private FirebaseDatabase database;
@@ -52,8 +54,10 @@ public class MainActivity extends AppCompatActivity {
         reference = database.getReference("Task");
 
 
-       // changeTask(n);
-        // reference.child("/task/dataTime").setValue("Время 2017");
+        //  String key = reference.child("tt").push().getKey();
+        // Log.d("fdd",key);
+
+
 
         result = new ArrayList<>();
         recyclerView = (RecyclerView) findViewById(R.id.task_list);
@@ -62,12 +66,13 @@ public class MainActivity extends AppCompatActivity {
         lin.setOrientation(LinearLayoutManager.VERTICAL);
         recyclerView.setLayoutManager(lin);
 
-        updateList();
 
         adapter = new TaskAdapter(result);
         recyclerView.setAdapter(adapter);
 
+        updateList();
 
+;
     }
 
     private List<TaskModel> creatResult() {
@@ -95,15 +100,15 @@ public class MainActivity extends AppCompatActivity {
 
                 result.add(dataSnapshot.getValue(TaskModel.class));
                 adapter.notifyDataSetChanged();
+
+
             }
 
             @Override
             public void onChildChanged(DataSnapshot dataSnapshot, String s) {
-
                 TaskModel model = dataSnapshot.getValue(TaskModel.class);
 
                 int index = getItemIndex(model);
-
                 result.set(index, model);
                 adapter.notifyItemChanged(getItemIndex(model));
             }
@@ -153,19 +158,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
-
     private void changeTask(int position) {
         TaskModel taskModel = result.get(position);
-        taskModel.dataTime = "12/12/34";
+        taskModel.dataTime = "2019";
 
-        Map<String,Object> taskValue  = taskModel.toMap();
-        Map<String,Object> newTask = new HashMap<>();
+        Map<String, Object> taskValue = taskModel.toMap();
+        Map<String, Object> newTask = new HashMap<>();
 
-        newTask.put(taskModel.key,taskValue);
+        newTask.put(taskModel.key, taskValue);
         reference.updateChildren(newTask);
 
 
+    }
 
+    private void removeTask(final int position) {
+
+        reference.child(result.get(position).key).removeValue();
 
     }
 

@@ -2,30 +2,34 @@ package com.example.devsk.emergencyservice;
 
 import android.content.Intent;
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.TextView;
-import android.widget.Toast;
 
+import com.google.firebase.database.DatabaseReference;
+import com.google.firebase.database.FirebaseDatabase;
+
+import java.util.HashMap;
 import java.util.List;
-
-
+import java.util.Map;
 
 import static android.support.v4.content.ContextCompat.startActivity;
 
 
-public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder> {
+
+    private FirebaseDatabase database;
+    private DatabaseReference reference;
 
 
-    public static final String EXTRA_M = "EXTRA_M" ;
-    public  static  final String EXTRA_A = "EXTRA_A";
-    public static  final String EXTRA_R = "EXTRA_R";
-    public static  final String EXTRA_P = "EXTRA_P";
+    public static final String EXTRA_M = "EXTRA_M";
+    public static final String EXTRA_A = "EXTRA_A";
+    public static final String EXTRA_R = "EXTRA_R";
+    public static final String EXTRA_P = "EXTRA_P";
+
     //   private Intent intent;
     private List<TaskModel> list;
 
@@ -36,11 +40,15 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
 
     @Override
     public TaskViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        return new TaskViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item,parent,false));
+        return new TaskViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item, parent, false));
+
     }
 
     @Override
-    public void onBindViewHolder(final TaskViewHolder holder, final int position)  {
+    public void onBindViewHolder(final TaskViewHolder holder, final int position) {
+
+        database = FirebaseDatabase.getInstance();
+        reference = database.getReference("Task");
 
         TaskModel taskm = list.get(position);
 
@@ -50,9 +58,7 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
         holder.reason.setText(taskm.reason);
 
 
-
         holder.itemView.setOnClickListener(new OnClickListener() {
-
 
 
             TaskModel taskm = list.get(position);
@@ -60,28 +66,27 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
             @Override
             public void onClick(View view) {
 
+                // reference = database.getReference("Task/" +  position);
 
-                Intent intent = new Intent(view.getContext(),ActivityDescription.class);
+                Intent intent = new Intent(view.getContext(), ActivityDescription.class);
                 String name = taskm.name;
                 String adress = taskm.adress;
                 String reason = taskm.reason;
+                String key = taskm.key;
 
 
+                Log.d("daf", key);
+
+                 intent.putExtra(EXTRA_P,key);
+                intent.putExtra(EXTRA_M, name);
+                intent.putExtra(EXTRA_A, adress);
+                intent.putExtra(EXTRA_R, reason);
 
 
-                intent.putExtra(EXTRA_M,name);
-                intent.putExtra(EXTRA_A,adress);
-                intent.putExtra(EXTRA_R,reason);
-
-
-                startActivity(view.getContext(),intent,null);
+                startActivity(view.getContext(), intent, null);
                 //Toast.makeText(view.getContext(),taskm.name,Toast.LENGTH_SHORT).show();
             }
         });
-
-
-
-
 
 
     }
@@ -92,32 +97,38 @@ public class TaskAdapter extends  RecyclerView.Adapter<TaskAdapter.TaskViewHolde
     }
 
 
+    class TaskViewHolder extends RecyclerView.ViewHolder {
 
-
-
-
-    class TaskViewHolder extends  RecyclerView.ViewHolder {
-
-        TextView name,adress,reason;
+        TextView name, adress, reason;
 
         public TaskViewHolder(View itemView) {
             super(itemView);
             name = (TextView) itemView.findViewById(R.id.textName);
             adress = (TextView) itemView.findViewById(R.id.textAd);
             reason = (TextView) itemView.findViewById(R.id.textPr);
-            itemView.setOnClickListener(new OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Log.d("daf", "Element " + getAdapterPosition() + " clicked.");
 
-                }
-            });
         }
-
-
 
 
     }
 
+    private void removeTask(int position) {
+
+        reference.child(list.get(position).key).removeValue();
+
+    }
+
+    private void changeTask(int position) {
+        TaskModel taskModel = list.get(position);
+        taskModel.dataTime = "201";
+
+        Map<String, Object> taskValue = taskModel.toMap();
+        Map<String, Object> newTask = new HashMap<>();
+
+        newTask.put(taskModel.key, taskValue);
+        reference.updateChildren(newTask);
+
+
+    }
 
 }
