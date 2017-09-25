@@ -6,5 +6,17 @@
     android:id="@+id/task_list"
     android:layout_width="match_parent"
     android:layout_height="match_parent"></android.support.v7.widget.RecyclerView>
+    
+    <TextView
+        android:visibility="invisible"
+        android:id="@+id/tex_no_data"
+        android:text="Нет данных"
+        android:gravity="center"
+        android:textColor="#000"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_centerInParent="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
 
 </RelativeLayout>

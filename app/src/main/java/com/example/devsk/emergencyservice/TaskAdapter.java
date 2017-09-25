@@ -75,7 +75,7 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
                 String key = taskm.key;
 
 
-                Log.d("daf", key);
+//                Log.d("daf", key);
 
                  intent.putExtra(EXTRA_P,key);
                 intent.putExtra(EXTRA_M, name);
@@ -118,17 +118,17 @@ public class TaskAdapter extends RecyclerView.Adapter<TaskAdapter.TaskViewHolder
 
     }
 
-    private void changeTask(int position) {
-        TaskModel taskModel = list.get(position);
-        taskModel.dataTime = "201";
-
-        Map<String, Object> taskValue = taskModel.toMap();
-        Map<String, Object> newTask = new HashMap<>();
-
-        newTask.put(taskModel.key, taskValue);
-        reference.updateChildren(newTask);
-
-
-    }
+///*    private void changeTask(int position) {
+//        TaskModel taskModel = list.get(position);
+//        taskModel.dataTime = "201";
+//
+//        Map<String, Object> taskValue = taskModel.toMap();
+//        Map<String, Object> newTask = new HashMap<>();
+//
+//        newTask.put(taskModel.key, taskValue);
+//        reference.updateChildren(newTask);
+//
+//
+//    }*/
 
 }

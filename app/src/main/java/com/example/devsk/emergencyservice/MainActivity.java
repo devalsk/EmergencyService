@@ -1,35 +1,23 @@
 package com.example.devsk.emergencyservice;
 
 
-import android.content.ClipData;
-import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.view.menu.MenuView;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.widget.ArrayAdapter;
-import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.ListView;
+import android.view.View;
 import android.widget.TextView;
 
-
-import com.firebase.ui.database.FirebaseListAdapter;
 import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
-import com.google.firebase.database.ValueEventListener;
 
-import java.lang.Object.*;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Random;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -42,6 +30,8 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseDatabase database;
     private DatabaseReference reference;
 
+    private TextView eptyItem;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,6 +39,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        eptyItem = (TextView) findViewById(R.id.tex_no_data);
 
         database = FirebaseDatabase.getInstance();
         reference = database.getReference("Task");
@@ -56,7 +47,6 @@ public class MainActivity extends AppCompatActivity {
 
         //  String key = reference.child("tt").push().getKey();
         // Log.d("fdd",key);
-
 
 
         result = new ArrayList<>();
@@ -71,8 +61,8 @@ public class MainActivity extends AppCompatActivity {
         recyclerView.setAdapter(adapter);
 
         updateList();
-
-;
+        isCheckEmpty();
+        ;
     }
 
     private List<TaskModel> creatResult() {
@@ -100,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
 
                 result.add(dataSnapshot.getValue(TaskModel.class));
                 adapter.notifyDataSetChanged();
-
+                isCheckEmpty();
 
             }
 
@@ -121,6 +111,7 @@ public class MainActivity extends AppCompatActivity {
 
                 result.remove(index);
                 adapter.notifyItemRemoved(index);
+                isCheckEmpty();
 
             }
 
@@ -176,5 +167,21 @@ public class MainActivity extends AppCompatActivity {
         reference.child(result.get(position).key).removeValue();
 
     }
+
+    private void isCheckEmpty() {
+
+        if (result.size() == 0) {
+
+            recyclerView.setVisibility(View.INVISIBLE);
+            eptyItem.setVisibility(View.VISIBLE);
+        } else {
+            recyclerView.setVisibility(View.VISIBLE);
+            eptyItem.setVisibility(View.INVISIBLE);
+
+        }
+
+
+    }
+
 
 }
